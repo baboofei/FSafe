@@ -21,6 +21,32 @@ hwreset (hwconf_t hw) {
 }
 
 int
+hwchck (hwconf_t hw) {
+	/*
+	 *	TODO: Implement: validate hardware configuration for potential problems
+	 */
+
+	#define HWCHCK_ERR_TEMPPINNOTANALOG -98
+	#define HWCHCK_ERR_REPEATPIN -99
+
+	if(hw.pin_temp == hw.pin_led_r || hw.pin_temp == hw.pin_led_g || hw.pin_led_r == hw.pin_led_g)
+		return HWCHCK_ERR_REPEATPIN;
+
+	int apins[6] = {A0, A1, A2, A3, A4, A5};
+	int i;
+	int isok = 0;
+
+	for(i; i < 5; ++i)
+		if(hw.pin_temp == apins[i])
+			isok = 1;
+
+	if(!isok)
+		return HWCHCK_ERR_TEMPPINNOTANALOG;
+
+	return 0;
+}
+
+int
 calcrawv (int read, int voltmax) {
 	return read * voltmax / 1024;
 }
@@ -36,6 +62,9 @@ const int conf_temp = 30;
 
 void
 setup (void) {
+	if(hwchck(conf))
+		for(;;){}
+
 	hwinit(conf);
 	Serial.begin(9600);
 }
