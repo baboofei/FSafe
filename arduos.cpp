@@ -46,19 +46,19 @@ hwchck (hwconf_t hw) {
 	return 0;
 }
 
-int
-calcrawv (int read, int voltmax) {
-	return read * voltmax / 1024;
+float
+calcrawv (float read, float voltmax) {
+	return read * voltmax / 1023;
 }
 
-int
-calctemp (int rawv) {
+float
+calctemp (float rawv) {
 	return 100 * rawv - 50;
 }
 
 const hwconf_t conf = {A0, 3, 4};
 
-const int conf_temp = 30;
+const int conf_temp = 20;
 
 void
 setup (void) {
@@ -75,8 +75,8 @@ loop (void) {
 
 	hwreset(conf);
 
-	int rawv = calcrawv(analogRead(A0), 5);
-	int temp = calctemp(rawv);
+	float rawv = calcrawv(analogRead(A0), 5);
+	float temp = calctemp(rawv);
 
 	if(temp >= conf_temp)
 	{
