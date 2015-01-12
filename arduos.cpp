@@ -9,6 +9,8 @@ typedef struct {
 
 void
 hwinit (hwconf_t hw) {
+	Serial.begin(9600);
+
 	pinMode(hw.pin_temp, INPUT);
 	pinMode(hw.pin_led_r, OUTPUT);
 	pinMode(hw.pin_led_g, OUTPUT);
@@ -62,7 +64,6 @@ setup (void) {
 		for(;;){digitalWrite(13, !digitalRead(13));}
 
 	hwinit(conf);
-	Serial.begin(9600);
 }
 
 void
@@ -73,6 +74,8 @@ loop (void) {
 
 	float rawv = calcrawv(analogRead(A0), 5);
 	float temp = calctemp(rawv);
+
+	Serial.println(temp);
 
 	if(temp >= conf_temp)
 	{
