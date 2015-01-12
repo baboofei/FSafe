@@ -22,10 +22,6 @@ hwreset (hwconf_t hw) {
 
 int
 hwchck (hwconf_t hw) {
-	/*
-	 *	TODO: Implement: validate hardware configuration for potential problems
-	 */
-
 	#define HWCHCK_ERR_TEMPPINNOTANALOG -98
 	#define HWCHCK_ERR_REPEATPIN -99
 
@@ -36,7 +32,7 @@ hwchck (hwconf_t hw) {
 	int i;
 	int isok = 0;
 
-	for(i; i < 5; ++i)
+	for(i = 0; i < 5; ++i)
 		if(hw.pin_temp == apins[i])
 			isok = 1;
 
@@ -63,7 +59,7 @@ const int conf_temp = 20;
 void
 setup (void) {
 	if(hwchck(conf))
-		for(;;){}
+		for(;;){digitalWrite(13, !digitalRead(13));}
 
 	hwinit(conf);
 	Serial.begin(9600);
