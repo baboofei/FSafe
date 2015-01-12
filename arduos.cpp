@@ -1,6 +1,11 @@
 #include "./arduino/Arduino.h"
 #include "./arduino/HardwareSerial.h"
 
+#define CONF_TEMP_THREASHOLD_STATIC 25
+#define CONF_TEMP_THREASHOLD_USEDYNC 0
+#define HWCHCK_ERR_TEMPPINNOTANALOG -98
+#define HWCHCK_ERR_REPEATPIN -99
+
 typedef struct {
 	int pin_temp;
 	int pin_led_r;
@@ -24,8 +29,6 @@ hwreset (hwconf_t hw) {
 
 int
 hwchck (hwconf_t hw) {
-	#define HWCHCK_ERR_TEMPPINNOTANALOG -98
-	#define HWCHCK_ERR_REPEATPIN -99
 
 	if(hw.pin_temp == hw.pin_led_r || hw.pin_temp == hw.pin_led_g || hw.pin_led_r == hw.pin_led_g)
 		return HWCHCK_ERR_REPEATPIN;
@@ -56,7 +59,7 @@ calctemp (float rawv) {
 
 const hwconf_t conf = {A0, 3, 4};
 
-const int conf_temp = 20;
+const int conf_temp = CONF_TEMP_THREASHOLD_STATIC;
 
 void
 setup (void) {
