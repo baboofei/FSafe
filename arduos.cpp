@@ -1,10 +1,10 @@
 #include "./arduino/Arduino.h"
 #include "./arduino/HardwareSerial.h"
 
-#define CONF_TEMP_THREASHOLD_STATIC 25
-#define CONF_TEMP_THREASHOLD_USEDYNC 0
-#define HWCHCK_ERR_TEMPPINNOTANALOG -98
-#define HWCHCK_ERR_REPEATPIN -99
+#define   CONF_TEMP_THREASHOLD_STATIC     25
+#define   CONF_TEMP_THREASHOLD_USEDYNC    0
+#define   HWCHCK_ERR_TEMPPINNOTANALOG    -98
+#define   HWCHCK_ERR_REPEATPIN           -99
 
 typedef struct {
 	int pin_temp;
@@ -71,6 +71,8 @@ setup (void) {
 
 void
 loop (void) {
+	static int is_rotten = 0;
+
 	delay(1000);
 
 	hwreset(conf);
@@ -80,9 +82,11 @@ loop (void) {
 
 	Serial.println(temp);
 
-	if(temp >= conf_temp)
+	if(temp >= conf_temp || is_rotten)
 	{
 		digitalWrite(conf.pin_led_r, HIGH);
+
+		is_rotten = 1;
 	}
 	else
 	{
