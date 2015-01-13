@@ -9,6 +9,7 @@
 typedef struct {
 	int pin_temp;
 	int pin_potn;
+	int pin_reset;
 	int pin_led_r;
 	int pin_led_g;
 } hwconf_t;
@@ -19,6 +20,7 @@ hwinit (hwconf_t hw) {
 
 	pinMode(hw.pin_temp, INPUT);
 	pinMode(hw.pin_potn, INPUT);
+	pinMode(hw.pin_reset, INPUT_PULLUP);
 	pinMode(hw.pin_led_r, OUTPUT);
 	pinMode(hw.pin_led_g, OUTPUT);
 }
@@ -52,6 +54,11 @@ hwchck (hwconf_t hw) {
 	return 0;
 }
 
+int
+hwreadbtn (hwconf_t hw) {
+	return !digitalRead(hw.pin_reset);
+}
+
 float
 calcrawv (float read, float voltmax) {
 	return read * voltmax / 1023;
@@ -70,7 +77,7 @@ calcthresh (float read) {
 	return (read / 1023) * (DYN_TEMP_HIGH - DYN_TEMP_LOW) + DYN_TEMP_LOW;
 }
 
-const hwconf_t conf = {A0, A1, 3, 4};
+const hwconf_t conf = {A0, A1, 5, 3, 4};
 
 void
 setup (void) {
@@ -95,6 +102,9 @@ loop (void) {
 
 	Serial.println(conf_temp);
 	Serial.println(temp);
+
+	if (hwreadbtn(conf))
+		is_rotten = 0;
 
 	if(temp >= conf_temp || is_rotten)
 	{
